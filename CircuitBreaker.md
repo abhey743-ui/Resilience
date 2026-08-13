@@ -1,4 +1,4 @@
-**# Circuit Breaker
+# Circuit Breaker
 
 ## The question it answers
 "This downstream service keeps failing — should I even bother calling it right now, or should I fail
