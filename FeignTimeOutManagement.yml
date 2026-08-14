@@ -1,0 +1,11 @@
+
+By doing this we can manage the timeout for the feign !
+
+spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 5000
+            readTimeout: 5000
