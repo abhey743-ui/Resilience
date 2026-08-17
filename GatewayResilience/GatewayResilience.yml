@@ -1,0 +1,18 @@
+# Resilience-relevant excerpt — connect/response timeouts for the Reactor Netty HTTP client the
+# gateway uses to call downstream services. Full explanation: GATEWAY-RESILIENCE.md, "The config"
+# section.
+#
+# NOTE: this lives under spring.cloud.gateway.httpclient — NOT under `server`. `server.*`
+# timeouts control the gateway's INBOUND side (how long it waits on the caller hitting IT).
+# This block controls the gateway's OUTBOUND side (how long it waits on Accounts/Loans/Cards
+# when it is the one calling THEM) — the side that actually matters for resilience here.
+spring:
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 2000    # milliseconds — TCP handshake only, fails fast on a truly down host
+        response-timeout: 28s    # full response wait — kept LOWER than the 30s Resilience4j
+                                  # TimeLimiter in GatewayserverApplication.java, so this layer
+                                  # always fires first, deterministically, on a genuinely slow
+                                  # downstream call. See GATEWAY-RESILIENCE.md for why equal
+                                  # values would create a race between the two timers.
